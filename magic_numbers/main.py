@@ -1,40 +1,36 @@
 from pathlib import Path
 
-def is_magic_num(szam):
+def kovetkezo_magikus(n):
+    s = str(n + 1)
+    hossz = len(s)
+    
+    bal = s[:(hossz + 1) // 2]
+    
+    def tukroz(feles):
+        t = feles + feles[:hossz // 2][::-1]
+        return int(t)
 
-    string = str(szam)
-    return string == string[::-1]
-
-def next_magic_num(n):
-
-    next_szam = n + 1
-    string = str(next_szam)
-
-    length = len(string)
-    half_szam = string[:(length + 1) // 2]
-    mirrored = int(half_szam + half_szam[:length // 2][::-1])
-
-    if mirrored > n:
-
-        return mirrored
-
-    half = str(int(half_szam) + 1)
-
-    if len(half) > len(half_szam):
-
-        return int("1" + "0" * length + "1")
-
-    return int(half + half[:length // 2][::-1])
+    m = tukroz(bal)
+    
+    if m >= n + 1:
+        return m
+    
+    uj_bal = str(int(bal) + 1)
+    
+    if len(uj_bal) > len(bal):
+        return int("1" + "0" * (hossz - 1) + "1")
+        
+    return tukroz(uj_bal)
 
 def main():
-    data = Path("input.txt").read_text(encoding="utf-8")
+    be_ut = Path("input.txt")
+    if not be_ut.exists(): return
 
-    for sor in data.splitlines():
-
-        sor = sor.strip()
-        szam = eval(sor.replace("^", "**"))
-
-        print(f"next_magic_num({szam}) => {next_magic_num(szam)}")
+    for sor in be_ut.read_text(encoding="utf-8").splitlines():
+        if not (s := sor.strip()): continue
+        
+        szam = eval(s.replace("^", "**"))
+        print(f"next_magic_num({szam}) => {kovetkezo_magikus(szam)}")
 
 if __name__ == "__main__":
     main()
